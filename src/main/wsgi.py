@@ -7,7 +7,7 @@ sentry_sdk.init(get_setting("SENTRY_DSN"), traces_sample_rate=1.0)
 
 def application(environ, start_response):
     if environ["PATH_INFO"] == "/e/":
-        division = 1 / 0
+        division: float = 1 / 0
 
     status = "200 OK"
 
@@ -33,3 +33,15 @@ def application(environ, start_response):
     start_response(status, list(headers.items()))
 
     yield payload
+
+
+def read_template(template_name: str) -> str:
+    dir_templates = DIR_SRC / "mail" / "templates"
+    template = dir_templates / template_name
+
+    assert template.is_file()
+
+    with template.open("r") as fd:
+        content = fd.read()
+
+    return content
